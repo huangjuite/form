@@ -1,0 +1,33 @@
+build*
+.cache
+# pixi environments
+.pixi
+*.egg-info
+.clangd
+compile_commands.json
+
+# vscode environments
+.vscode
+.envrc
+
+.helix
+
+*.bbl
+*.bcf
+*.aux
+*.blg
+*.log
+*.synctex
+*.run.xml
+*.rrd
+
+# python
+__pycache__
+evalio_results
+*.pyi
+
+*.png
+
+# final outputs
+figures
+graphics

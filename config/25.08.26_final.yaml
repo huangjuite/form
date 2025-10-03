@@ -1,0 +1,51 @@
+pipelines:
+  - pipeline: mad
+    num_keyframes: 4
+    realtime: true
+
+  - pipeline: ct_2022
+    name: ct
+
+  - kiss
+  - genz
+
+  - pipeline: form
+
+  - pipeline: form
+    name: form_planar
+    point_feats_per_sector: 0
+
+  - pipeline: form
+    name: form_single
+    disable_smoothing: true
+
+datasets:
+    # ncd20
+  - name: newer_college_2020/short_experiment
+    length: 6000
+  - name: newer_college_2020/long_experiment
+    length: 6000
+  - name: newer_college_2020/parkland_mound
+    length: 6000
+  # ncd21
+  - name: newer_college_2021/*
+    length: 6000
+  # mcd
+  - name: multi_campus/*
+    length: 6000
+  # spires
+  - name: oxford_spires/*
+    length: 6000
+  # hilti
+  - name: hilti_2022/*
+    length: 6000
+  # cumulti
+  - name: cumulti/*
+    length: 6000
+  # botanic garden
+  - name: botanic_garden/*
+    length: 6000
+  # TODO: Should I include this?
+  # helipr
+  # - name: helipr/*
+  #   length: 6000
