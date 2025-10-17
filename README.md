@@ -9,6 +9,7 @@
 <a href="https://arxiv.org/abs/2510.09966"><img src="https://img.shields.io/badge/arXiv-2510.09966-b31b1b.svg" /></a>
 <br />
 <br />
+  
 FORM is a LiDAR Odometry system that performs fixed-lag **smoothing** and sub-map **reparations**, all in **real-time** with minimal parameters.
 <br />
 <br />
