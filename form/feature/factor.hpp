@@ -80,8 +80,8 @@ struct PlanePoint {
   /// @return The residual vector
   [[nodiscard]] gtsam::Vector
   evaluateError(const gtsam::Pose3 &Ti, const gtsam::Pose3 &Tj,
-                OptionalJacobian residual_D_Ti = boost::none,
-                OptionalJacobian residual_D_Tj = boost::none) const noexcept;
+                OptionalJacobian residual_D_Ti = nullptr,
+                OptionalJacobian residual_D_Tj = nullptr) const noexcept;
 };
 
 /// @brief Structure that holds point-point correspondences and computes their error
@@ -125,8 +125,8 @@ struct PointPoint {
   /// @return The residual vector
   [[nodiscard]] gtsam::Vector
   evaluateError(const gtsam::Pose3 &Ti, const gtsam::Pose3 &Tj,
-                OptionalJacobian residual_D_Ti = boost::none,
-                OptionalJacobian residual_D_Tj = boost::none) const noexcept;
+                OptionalJacobian residual_D_Ti = nullptr,
+                OptionalJacobian residual_D_Tj = nullptr) const noexcept;
 };
 
 /// @brief A wrapper factor that holds both plane-point and point-point constraints
@@ -158,9 +158,8 @@ public:
   /// @return The residual vector
   [[nodiscard]] gtsam::Vector
   evaluateError(const gtsam::Pose3 &Ti, const gtsam::Pose3 &Tj,
-                boost::optional<gtsam::Matrix &> residual_D_Ti = boost::none,
-                boost::optional<gtsam::Matrix &> residual_D_Tj =
-                    boost::none) const noexcept override;
+                gtsam::Matrix* residual_D_Ti = nullptr,
+                gtsam::Matrix* residual_D_Tj = nullptr) const noexcept override;
 };
 
 } // namespace form

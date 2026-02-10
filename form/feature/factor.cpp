@@ -140,8 +140,8 @@ FeatureFactor::FeatureFactor(
 
 [[nodiscard]] gtsam::Vector
 FeatureFactor::evaluateError(const gtsam::Pose3 &Ti, const gtsam::Pose3 &Tj,
-                             boost::optional<gtsam::Matrix &> H1,
-                             boost::optional<gtsam::Matrix &> H2) const noexcept {
+                             gtsam::Matrix* H1,
+                             gtsam::Matrix* H2) const noexcept {
 
   size_t size = plane_point->num_residuals() + point_point->num_residuals();
   gtsam::Vector residual(size);
@@ -158,7 +158,7 @@ FeatureFactor::evaluateError(const gtsam::Pose3 &Ti, const gtsam::Pose3 &Tj,
   if (plane_point->num_residuals() > 0) {
     Eigen::MatrixXd H1_temp, H2_temp;
     residual.segment(start, end - start) =
-        plane_point->evaluateError(Ti, Tj, H1 ? &H1_temp : 0, H2 ? &H2_temp : 0);
+        plane_point->evaluateError(Ti, Tj, H1 ? &H1_temp : nullptr, H2 ? &H2_temp : nullptr);
     if (H1) {
       H1->block(start, 0, end - start, 6) = H1_temp;
     }
@@ -173,7 +173,7 @@ FeatureFactor::evaluateError(const gtsam::Pose3 &Ti, const gtsam::Pose3 &Tj,
   if (point_point->num_residuals() > 0) {
     Eigen::MatrixXd H1_temp, H2_temp;
     residual.segment(start, end - start) =
-        point_point->evaluateError(Ti, Tj, H1 ? &H1_temp : 0, H2 ? &H2_temp : 0);
+        point_point->evaluateError(Ti, Tj, H1 ? &H1_temp : nullptr, H2 ? &H2_temp : nullptr);
     if (H1) {
       H1->block(start, 0, end - start, 6) = H1_temp;
     }

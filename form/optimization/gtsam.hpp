@@ -64,7 +64,7 @@ public:
 
   // Blatantly stolen from here, just with last line changed:
   // https://github.com/borglab/gtsam/blob/develop/gtsam/nonlinear/NonlinearFactor.cpp#L152
-  boost::shared_ptr<gtsam::GaussianFactor>
+  std::shared_ptr<gtsam::GaussianFactor>
   linearize(const gtsam::Values &x) const override {
     // Call evaluate error to get Jacobians and RHS vector b
     std::vector<gtsam::Matrix> A(size());
@@ -81,15 +81,15 @@ public:
       terms[j].second.swap(A[j]);
     }
 
-    return gtsam::GaussianFactor::shared_ptr(
-        new gtsam::HessianFactor(gtsam::JacobianFactor(terms, b)));
+    return std::make_shared<gtsam::HessianFactor>(
+        gtsam::JacobianFactor(terms, b));
   }
 };
 
 /// @brief A fast isotropic noise model that uses a single sigma value for all
 /// dimensions. The gtsam version allocates a vector of sigmas, which is unnecessary
 class FastIsotropic : public gtsam::noiseModel::Gaussian {
-  typedef boost::shared_ptr<FastIsotropic> shared_ptr;
+  typedef std::shared_ptr<FastIsotropic> shared_ptr;
 
   double sigma_, invsigma_;
 
@@ -146,25 +146,26 @@ class BinaryFactorWrapper : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
   using Wrapped = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
 
 private:
-  boost::shared_ptr<Wrapped> factor_;
+  std::shared_ptr<Wrapped> factor_;
   gtsam::Pose3 pose_i_;
 
 public:
   BinaryFactorWrapper(const gtsam::Pose3 &pose_i, const gtsam::Key &key,
-                      const boost::shared_ptr<Wrapped> &factor)
-      : Base(factor->noiseModel(), key), factor_(factor), pose_i_(pose_i) {}
+                      std::shared_ptr<Wrapped> factor)
+      : gtsam::NoiseModelFactor1<gtsam::Pose3>((*factor).noiseModel(), key),
+        factor_(std::move(factor)), pose_i_(pose_i) {}
 
   template <typename T>
   static BinaryFactorWrapper Create(const gtsam::Pose3 &pose, const gtsam::Key &key,
                                     const T &factor) {
-    return BinaryFactorWrapper(pose, key, boost::make_shared<T>(factor));
+    return BinaryFactorWrapper(pose, key, std::make_shared<T>(factor));
   }
 
   // Evaluate the factor
   gtsam::Vector
   evaluateError(const gtsam::Pose3 &pose_j,
-                boost::optional<gtsam::Matrix &> H = boost::none) const override {
-    return factor_->evaluateError(pose_i_, pose_j, boost::none, H);
+                gtsam::Matrix* H = nullptr) const {
+    return factor_->evaluateError(pose_i_, pose_j, nullptr, H);
   }
 };
 
