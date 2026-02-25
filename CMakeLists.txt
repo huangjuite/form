@@ -42,8 +42,9 @@ target_include_directories(FORM
 	PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 	$<INSTALL_INTERFACE:include>
-	PRIVATE
-	${tsl_SOURCE_DIR}/include
+	PUBLIC
+	$<BUILD_INTERFACE:${tsl_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>
 )
 # Explicitly list header files for IDE support
 set(FORM_HEADERS
@@ -92,6 +93,11 @@ install(TARGETS FORM
 install(DIRECTORY form/
 	DESTINATION include/form
 	FILES_MATCHING PATTERN "*.hpp" PATTERN "*.tpp"
+)
+
+# Install tsl headers (used by public header map.hpp)
+install(DIRECTORY ${tsl_SOURCE_DIR}/include/tsl
+	DESTINATION include
 )
 
 # Create and install CMake config files
