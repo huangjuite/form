@@ -63,6 +63,7 @@ set(FORM_HEADERS
 	form/utils.hpp
 )
 target_sources(FORM PRIVATE ${FORM_HEADERS})
+set_target_properties(FORM PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(FORM
 	PUBLIC
 	gtsam
